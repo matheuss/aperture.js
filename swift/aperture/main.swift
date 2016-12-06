@@ -15,6 +15,7 @@ func record(){
   let cropArea = Process.arguments[3];
   let showCursor = Process.arguments[4] == "true" ? true : false;
   let highlightClicks = Process.arguments[5] == "true" ? true : false;
+  let audioDeviceId = Process.arguments[6];
 
   var coordinates = [];
   if (cropArea != "none") {
@@ -25,7 +26,14 @@ func record(){
     }
   }
 
-  let recorder = Recorder(destinationPath: destinationPath, fps: fps, coordinates: coordinates as! [String], showCursor: showCursor, highlightClicks: highlightClicks);
+  let recorder = Recorder(
+    destinationPath: destinationPath,
+    fps: fps,
+    coordinates: coordinates as! [String],
+    showCursor: showCursor,
+    highlightClicks: highlightClicks,
+    audioDeviceId: audioDeviceId
+  );
 
   recorder.start();
   setbuf(__stdoutp, nil);
@@ -39,15 +47,15 @@ func listAudioDevices() {
 }
 
 func usage() {
-  print("usage: main <list-audio-devices | <destinationPath> <fps> <crop-rect-coordinates> <show-cursor> <highlight-clicks> >");
-  print("examples: main ./file.mp4 30 0:0:100:100 true false");
-  print("          main ./file.mp4 30 none true false");
+  print("usage: main <list-audio-devices | <destinationPath> <fps> <crop-rect-coordinates> <show-cursor> <highlight-clicks> <audio-source-id> >");
+  print("examples: main ./file.mp4 30 0:0:100:100 true false \"AppleHDAEngineInput:1B,0,1,0:1\"");
+  print("          main ./file.mp4 30 none true false none");
   print("          main list-audio-devices");
 }
 
 let numberOfArgs = Process.arguments.count
 
-if (numberOfArgs == 6) {
+if (numberOfArgs == 7) {
   record();
   exit(0);
 }
